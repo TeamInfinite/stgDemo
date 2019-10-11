@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
+import gui.GamePaneManager;
+import gui.ScorePaneManager;
 import javafx.scene.image.ImageView;
 import model.Bullet;
 import model.BulletOld;
@@ -80,8 +82,9 @@ public class Game {
 	
 	/** Will be called when the player dies.
 	 *  @return if game status, which can be found in GameParam */
-	public int playerDead() {
+	public int playerDead(ScorePaneManager scorePane) {
 		life--;
+		scorePane.refreshLife();
 		
 		if(life == 0) {
 			return GameParam.NO_LIFE_LEFT;
@@ -115,5 +118,15 @@ public class Game {
 	public boolean isTimeStoped() {
 		return timeStop.isStoped();
 	}
+
+	public ArrayList<EBullet> geteBullets() {
+		return eBullets;
+	}
+
+	public int getLife() {
+		return life;
+	}
+	
+	
 
 }

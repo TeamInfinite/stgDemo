@@ -1,6 +1,6 @@
 package model;
 
-import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 
 public class PlayerImpl extends Player {
 	
@@ -18,7 +18,7 @@ public class PlayerImpl extends Player {
 	}
 
 	@Override
-	public ImageView getHitBox() {
+	public Rectangle getHitBox() {
 		return null;
 	}
 

@@ -1,14 +1,18 @@
 package model;
 
-public class EBullet extends GameComp {
+public class EBullet extends GameComp implements Suiciding {
 	
 	// == fields ==
 	private double dx;
 	private double dy;
 
-	public EBullet(String imgAddress) {
+	public EBullet(String imgAddress, double dx, double dy) {
 		super(imgAddress);
-		// TODO Auto-generated constructor stub
+		
+		this.dx = dx;
+		this.dy = dy;
+		
+		hp = 200;
 	}
 	
 	// == public methods ==
@@ -16,5 +20,14 @@ public class EBullet extends GameComp {
 		image.setLayoutX(image.getLayoutX() + dx);
 		image.setLayoutY(image.getLayoutY() + dy);
 	}
-	
+
+	@Override
+	public void suicide() {
+		hp = 0;
+	}
+
+	@Override
+	public void suiciding() {
+		hp--;
+	}
 }

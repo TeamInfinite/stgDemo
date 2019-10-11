@@ -20,10 +20,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Bullet;
 import model.BulletOld;
+import model.EBullet;
 import model.EnemyOld;
 import model.Enemy;
 import model.GameComp;
 import model.PlayerImpl;
+import model.Turret;
 import model.bullets.PBullet;
 
 public class ViewManager {
@@ -160,7 +162,7 @@ public class ViewManager {
 		ImageView player = controller.getGame().getPlayerImageView();
 		player.setLayoutX(Param.SPAWN_POS_X);
 		player.setLayoutY(Param.SPAWN_POS_Y);
-		gamePane.getPane().getChildren().add(player);
+		gamePane.getPane().getChildren().addAll(player);
 		
 	}
 	
@@ -188,7 +190,8 @@ public class ViewManager {
 						controller.getGame().moveTimeStopTimer();
 					} else {
 						enemiesMove();
-						
+						enemiesFire();
+						eBulletsMove();
 					}
 					
 					//System.out.println(controller.getGame().isTimeStoped());
@@ -231,10 +234,29 @@ public class ViewManager {
 		}
 	}
 	
+	private void enemiesFire() {
+		for(Enemy e : controller.getGame().getEnemies()) {
+			e.fire(gamePane, controller.getGame());
+		}
+	}
+	
 	private void enemiesMove() {
 		for(Enemy e : controller.getGame().getEnemies()) {
 			e.move();
 			// System.out.println(e.getImageView().getLayoutX() + " " + e.getImageView().getLayoutY());
+		}
+	}
+	
+	private void eBulletsMove() {
+		for(EBullet eb : controller.getGame().geteBullets()) {
+			eb.move();
+			eb.suiciding();
+			if(eb.getImageView().getBoundsInParent().intersects(controller.getGame().getPlayerImageView().getBoundsInParent())) {
+				eb.suicide();
+				killPlayer();
+				initPlayer();
+				controller.getGame().playerDead(scorePane);
+			}
 		}
 	}
 	
@@ -263,11 +285,9 @@ public class ViewManager {
 		
 		while(iterator.hasNext()) {
 			Bullet bullet = iterator.next();
-			if(bullet instanceof GameComp) {
-				if(((GameComp)bullet).getHp() <= 0) {
-					gamePane.getPane().getChildren().remove(bullet.getImageView());
-					iterator.remove();
-				}
+			if(bullet.getHp() <= 0) {
+				gamePane.getPane().getChildren().remove(bullet.getImageView());
+				iterator.remove();
 			}
 		}
 		
@@ -275,16 +295,23 @@ public class ViewManager {
 		
 		while(eIterator.hasNext()) {
 			Enemy e = eIterator.next();
-			if(e instanceof GameComp) {
-				if(((GameComp)e).getHp() <= 0) {
-					gamePane.getPane().getChildren().remove(e.getImageView());
-					eIterator.remove();
-					controller.getGame().score(e.getScore());
-					scorePane.refreshScore();
-				}
+			if(e.getHp() <= 0) {
+				gamePane.getPane().getChildren().remove(e.getImageView());
+				eIterator.remove();
+				controller.getGame().score(e.getScore());
+				scorePane.refreshScore();
 			}
 		}
 		
+		Iterator<EBullet> eBIterator = controller.getGame().geteBullets().iterator();
+		
+		while(eBIterator.hasNext()) {
+			EBullet eb = eBIterator.next();
+			if(eb.getHp() <= 0) {
+				gamePane.getPane().getChildren().remove(eb.getImageView());
+				eBIterator.remove();
+			}
+		}
 	}
 	
 	private void refreshFps(int frameSpin) {

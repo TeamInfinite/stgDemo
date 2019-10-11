@@ -1,6 +1,6 @@
 package model;
 
-public abstract class Bullet extends GameComp {
+public abstract class Bullet extends GameComp implements Suiciding{
 
 	// == fields ==
 	protected int power;

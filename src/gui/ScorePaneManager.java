@@ -31,6 +31,10 @@ public class ScorePaneManager {
 		score.setText("Score: " + controller.getGame().getScore());
 	}
 	
+	public void refreshLife() {
+		life.setText("Life: " + controller.getGame().getLife());
+	}
+	
 	
 	// == getters ==
 	public AnchorPane getPane() {

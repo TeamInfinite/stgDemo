@@ -1,25 +1,21 @@
 package model;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 
 public abstract class Player extends GameComp {
 	
 	// == fields ==
-	protected ImageView hitBox = new ImageView();
+	private Rectangle hitBox = new Rectangle(0, 0, 2, 2);
 
-	public Player(String imgAddress, String hitBoxAddr) {
-		super(imgAddress);
-		
-		hitBox.setImage(new Image(hitBoxAddr));
-	}
-	
 	public Player(String imgAddress) {
 		super(imgAddress);
+		
+		hitBox.setLayoutX(image.getLayoutX() + 5);
+		hitBox.setLayoutY(image.getLayoutY() + 5);
 	}
 	
 	// == getters ==
-	public ImageView getHitBox() {
+	public Rectangle getHitBox() {
 		return hitBox;
 	}
 	
