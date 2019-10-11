@@ -1,7 +1,10 @@
 package model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 import controller.Game;
 import gui.GamePaneManager;
@@ -38,11 +41,24 @@ public class Turret {
 	}
 	
 	public static LinkedList<Turret> readFile(String addr) {
+		LinkedList<Turret> turret = new LinkedList<>();
+		Scanner scan = null;
 		
-		return null;
+		try {
+			scan = new Scanner(new File(addr));
+			
+			Turret temp = translate();
+			turret.add(temp);
+		} catch(FileNotFoundException e) {
+			
+		} finally {
+			scan.close();
+		}
+		
+		return turret;
 	}
 	
-	public static Turret translate(String line) {
+	public static Turret translate() {
 		return null;
 	}
 	

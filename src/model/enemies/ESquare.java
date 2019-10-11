@@ -22,7 +22,7 @@ public class ESquare extends Enemy {
 		
 		testSetting();
 		
-		hp = 1000;
+		hp = 20;
 		
 		firePosX = FIRE_POS_X;
 		firePosY = FIRE_POS_Y;
@@ -42,6 +42,10 @@ public class ESquare extends Enemy {
 	public void setEPath() {
 		setPath(EPath.load(PATH_ADDR));
 	}
+	
+	public void setEPath(String addr) {
+		setPath(EPath.load(addr));
+	}
 
 	@Override
 	public void setTurret() {
@@ -54,8 +58,8 @@ public class ESquare extends Enemy {
 		temp.add(t2);
 		temp.add(t3);
 		
-		for(int i = 0; i <= 20; i++) {
-			turret.offer(new Turret(100 + i * 20, 1, temp));
+		for(int i = 0; i <= 60; i++) {
+			turret.offer(new Turret(30 + i * 20, 1, temp));
 		}
 	}
 

@@ -1,5 +1,6 @@
 package model;
 
+import controller.GameParam;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -18,6 +19,8 @@ public class EBullet extends GameComp implements Suiciding {
 		this.dy = dy;
 		
 		hitBox.setFill(Color.RED);
+		if(!GameParam.TEST_MODE)
+			hitBox.setOpacity(0);
 		
 		hp = 200;
 	}

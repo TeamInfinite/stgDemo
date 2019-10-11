@@ -29,6 +29,7 @@ public class ViewManager {
 	private GamePaneManager gamePane;
 	private ScorePaneManager scorePane;
 	private Label fps;
+	private AnimationTimer gameLoop;
 	
 	private long startTime = 0;
 	
@@ -143,6 +144,13 @@ public class ViewManager {
 			case A:
 				controller.getGame().timeStop();
 				break;
+			case ESCAPE:
+				if(controller.getGame().isRunning())
+					controller.getGame().setRunning(false);
+				else
+					controller.getGame().setRunning(true);
+				System.out.println(controller.getGame().isRunning());
+				break;
 			default:
 				break;
 			}
@@ -158,7 +166,10 @@ public class ViewManager {
 		player.setLayoutY(Param.SPAWN_POS_Y);
 		hitBox.setLayoutX(Param.SPAWN_POS_X + 16.5);
 		hitBox.setLayoutY(Param.SPAWN_POS_Y + 22);
+		
 		hitBox.setFill(Color.RED);
+		if(!GameParam.TEST_MODE)
+			hitBox.setOpacity(0);
 		
 		controller.getGame().setImmunity(GameParam.RESPAWN_IMMUNITY_TIME);
 		
@@ -174,21 +185,21 @@ public class ViewManager {
 	}
 	
 	private void initGameLoop() {
-		new AnimationTimer() {
+		gameLoop = new AnimationTimer() {
 			
 			private long lastUpdate = 0 ;
 			@Override
 			public void handle(long now) {
 				
-				if(now - lastUpdate >= 8_000_000) {
-					controller.getGame().moveTimer();
-					
+				if(controller.getGame().isRunning() && now - lastUpdate >= 8_000_000) {
 					playerMove();
 					bulletsMove();
 					
 					if(controller.getGame().isTimeStoped()) {
 						controller.getGame().moveTimeStopTimer();
 					} else {
+						controller.getGame().moveTimer();
+						enemySpawn();
 						enemiesMove();
 						enemiesFire();
 						eBulletsMove();
@@ -200,16 +211,21 @@ public class ViewManager {
 					checkSuicide();
 					playerFire();
 					removeDead();
-					refreshFps(30);
-					lastUpdate = now ;
 				}
+				refreshFps(30);
+				lastUpdate = now ;
 			}
 
-		}.start();
+		};
 		
+		gameLoop.start();
 	}
 	
 	// == game loop methods ==
+	private void enemySpawn() {
+		controller.getGame().enemySpawn(gamePane);
+	}
+	
 	private void playerMove() {
 		if(controller.isMovingUp()) controller.moveUp();
 		if(controller.isMovingDown()) controller.moveDown();
@@ -265,7 +281,7 @@ public class ViewManager {
 	
 	private void checkSuicide() {
 		for(Enemy e : controller.getGame().getEnemies()) {
-			if(controller.getGame().getPlayerImageView().getBoundsInParent().intersects(e.getImageView().getBoundsInParent())) {
+			if(controller.getGame().getPlayerHitBox().getBoundsInParent().intersects(e.getImageView().getBoundsInParent())) {
 				killPlayer();
 				initPlayer();
 			}
@@ -290,8 +306,11 @@ public class ViewManager {
 			if(e.getHp() <= 0) {
 				gamePane.getPane().getChildren().remove(e.getImageView());
 				eIterator.remove();
-				controller.getGame().score(e.getScore());
-				scorePane.refreshScore();
+				
+				if(e.getHp() != -10) {
+					controller.getGame().score(e.getScore());
+					scorePane.refreshScore();
+				}
 			}
 		}
 		

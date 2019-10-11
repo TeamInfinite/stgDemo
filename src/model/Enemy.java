@@ -36,7 +36,7 @@ public abstract class Enemy extends GameComp {
 			image.setLayoutX(temp.getX());
 			image.setLayoutY(temp.getY());
 		} else {
-			hp = 0;
+			hp = -10;
 		}
 	}
 	
@@ -56,6 +56,10 @@ public abstract class Enemy extends GameComp {
 		if(timer == EnemyParam.RESET_POINT) {
 			timer = 0;
 		}
+	}
+	
+	public void setEPath(LinkedList<EPath> path) {
+		this.path = path;
 	}
 	
 	// == setters and getters ==

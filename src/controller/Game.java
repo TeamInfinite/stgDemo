@@ -1,7 +1,9 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
+import gui.GamePaneManager;
 import gui.ScorePaneManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
@@ -9,6 +11,7 @@ import model.Bullet;
 import model.EBullet;
 import model.Player;
 import model.Enemy;
+import model.EnemySpawn;
 import model.PlayerImpl;
 import model.TimeStop;
 import model.enemies.ESquare;
@@ -30,12 +33,26 @@ public class Game {
 	private ArrayList<Enemy> enemies = new ArrayList<>();
 	private ArrayList<Bullet> bullets = new ArrayList<>();
 	private ArrayList<EBullet> eBullets = new ArrayList<>();
+	private LinkedList<EnemySpawn> level = new LinkedList<>();
+	private EnemySpawn next;
 	
 	public Game() {
 		life = GameParam.DEFAULT_LIFE;
 		
 		initPlayer();
 		initEnemy();
+		test();
+		
+		if(level.peek() != null) {
+			next = level.poll();
+		}
+	}
+	
+	private void test() {
+		for(int i = 0 ; i < 5; i++) {
+			level.offer(new EnemySpawn(100 + 50 * i, 1, "default"));
+			level.offer(new EnemySpawn(125 + 50 * i, 1, "src\\resources\\path\\test2.txt"));
+		}
 	}
 
 	// == init methods ==
@@ -43,15 +60,21 @@ public class Game {
 		player = new PlayerImpl();
 	}
 	
-	private void initEnemy() {
-		ESquare sqr = new ESquare();
-		sqr.getImageView().setTranslateX(0);
-		sqr.getImageView().setTranslateY(0);
+	private void initEnemy() {	
 		
-		enemies.add(sqr);
 	}
 	
 	// == public methods ==
+	public void enemySpawn(GamePaneManager gamePane) {
+		if(next.getSpawnTime() == timer) {
+			EnemySpawn.spawn(next.getEnemyType(), gamePane, this, next.getAddr());
+		
+			if(level.peek() != null) {
+				next = level.poll();
+			}
+		}
+	}
+	
 	public void timeStop() {
 		timeStop.timeStop();
 	}
@@ -147,5 +170,13 @@ public class Game {
 
 	public void setImmunity(int immunity) {
 		this.immunity = immunity;
+	}
+
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	public void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
 	}
 }
