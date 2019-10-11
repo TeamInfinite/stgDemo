@@ -1,7 +1,5 @@
 package model;
 
-import javafx.scene.shape.Rectangle;
-
 public class PlayerImpl extends Player {
 	
 	// == constants ==
@@ -13,13 +11,7 @@ public class PlayerImpl extends Player {
 	// == constructor ==
 	public PlayerImpl() {
 		super(IMG_ADDR);
-		
+	
 		hp = 1;
 	}
-
-	@Override
-	public Rectangle getHitBox() {
-		return null;
-	}
-
 }

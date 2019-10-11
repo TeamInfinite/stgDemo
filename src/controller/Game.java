@@ -2,11 +2,10 @@ package controller;
 
 import java.util.ArrayList;
 
-import gui.GamePaneManager;
 import gui.ScorePaneManager;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 import model.Bullet;
-import model.BulletOld;
 import model.EBullet;
 import model.Player;
 import model.Enemy;
@@ -20,6 +19,7 @@ public class Game {
 	private int score;
 	private int life;
 	private int lifePart;
+	private int immunity;
 	private TimeStop timeStop = new TimeStop();
 	
 	private int timer = 0;
@@ -74,6 +74,16 @@ public class Game {
 		if(timer == GameParam.RESET_POINT) {
 			resetTimer();
 		}
+		
+		if(immunity > 0) {
+			if(immunity % 10 >= 5) {
+				getPlayerImageView().setOpacity(0);
+			} else {
+				getPlayerImageView().setOpacity(100);
+			}
+			
+			immunity --;
+		}
 	}
 	
 	public void score(int score) {
@@ -127,6 +137,15 @@ public class Game {
 		return life;
 	}
 	
-	
+	public Rectangle getPlayerHitBox() {
+		return player.getHitBox();
+	}
 
+	public int getImmunity() {
+		return immunity;
+	}
+
+	public void setImmunity(int immunity) {
+		this.immunity = immunity;
+	}
 }

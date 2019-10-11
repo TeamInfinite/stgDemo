@@ -1,5 +1,6 @@
 package controller;
 
+import gui.Param;
 import javafx.scene.image.Image;
 import model.PlayerImpl;
 import model.bullets.PBullet;
@@ -22,36 +23,52 @@ public class MainController {
 	
 	// == move methods ==
 	public void moveUp() {
-		if(isSlowlyMoving) {
-			game.getPlayerImageView().setLayoutY(game.getPlayerImageView().getLayoutY() - GameParam.SLOW_SPEED);
-		} else {
-			game.getPlayerImageView().setLayoutY(game.getPlayerImageView().getLayoutY() - GameParam.DEFAULT_SPEED);
+		if(game.getPlayerImageView().getLayoutY() + game.getPlayerImageView().getTranslateY() > 0) {
+			if(isSlowlyMoving) {
+				game.getPlayerImageView().setLayoutY(game.getPlayerImageView().getLayoutY() - GameParam.SLOW_SPEED);
+				game.getPlayerHitBox().setLayoutY(game.getPlayerHitBox().getLayoutY() - GameParam.SLOW_SPEED);
+			} else {
+				game.getPlayerImageView().setLayoutY(game.getPlayerImageView().getLayoutY() - GameParam.DEFAULT_SPEED);
+				game.getPlayerHitBox().setLayoutY(game.getPlayerHitBox().getLayoutY() - GameParam.DEFAULT_SPEED);
+			}
 		}
 	}
 	
 	public void moveDown() {
-		if(isSlowlyMoving) {
-			game.getPlayerImageView().setLayoutY(game.getPlayerImageView().getLayoutY() + GameParam.SLOW_SPEED);
-		} else {
-			game.getPlayerImageView().setLayoutY(game.getPlayerImageView().getLayoutY() + GameParam.DEFAULT_SPEED);
+		if(game.getPlayerImageView().getLayoutY() + game.getPlayerImageView().getTranslateY() < Param.GAME_PANE_HEIGHT - game.getPlayerImageView().getImage().getHeight()) {
+			if(isSlowlyMoving) {
+				game.getPlayerImageView().setLayoutY(game.getPlayerImageView().getLayoutY() + GameParam.SLOW_SPEED);
+				game.getPlayerHitBox().setLayoutY(game.getPlayerHitBox().getLayoutY() + GameParam.SLOW_SPEED);
+			} else {
+				game.getPlayerImageView().setLayoutY(game.getPlayerImageView().getLayoutY() + GameParam.DEFAULT_SPEED);
+				game.getPlayerHitBox().setLayoutY(game.getPlayerHitBox().getLayoutY() + GameParam.DEFAULT_SPEED);
+			}
 		}
 	}
 	
 	public void moveLeft() {
 		game.getPlayerImageView().setImage(new Image(PlayerImpl.IMG_ADDR_LEFT));
-		if(isSlowlyMoving) {
-			game.getPlayerImageView().setLayoutX(game.getPlayerImageView().getLayoutX() - GameParam.SLOW_SPEED);
-		} else {
-			game.getPlayerImageView().setLayoutX(game.getPlayerImageView().getLayoutX() - GameParam.DEFAULT_SPEED);
+		if(game.getPlayerImageView().getLayoutX() + game.getPlayerImageView().getTranslateX() > 0) {
+			if(isSlowlyMoving) {
+				game.getPlayerImageView().setLayoutX(game.getPlayerImageView().getLayoutX() - GameParam.SLOW_SPEED);
+				game.getPlayerHitBox().setLayoutX(game.getPlayerHitBox().getLayoutX() - GameParam.SLOW_SPEED);
+			} else {
+				game.getPlayerImageView().setLayoutX(game.getPlayerImageView().getLayoutX() - GameParam.DEFAULT_SPEED);
+				game.getPlayerHitBox().setLayoutX(game.getPlayerHitBox().getLayoutX() - GameParam.DEFAULT_SPEED);
+			}
 		}
 	}
 	
 	public void moveRight() {
 		game.getPlayerImageView().setImage(new Image(PlayerImpl.IMG_ADDR_RIGHT));
-		if(isSlowlyMoving) {
-			game.getPlayerImageView().setLayoutX(game.getPlayerImageView().getLayoutX() + GameParam.SLOW_SPEED);
-		} else {
-			game.getPlayerImageView().setLayoutX(game.getPlayerImageView().getLayoutX() + GameParam.DEFAULT_SPEED);
+		if(game.getPlayerImageView().getLayoutX() + game.getPlayerImageView().getTranslateX() < Param.GAME_PANE_WIDTH - game.getPlayerImageView().getImage().getWidth()) {
+			if(isSlowlyMoving) {
+				game.getPlayerImageView().setLayoutX(game.getPlayerImageView().getLayoutX() + GameParam.SLOW_SPEED);
+				game.getPlayerHitBox().setLayoutX(game.getPlayerHitBox().getLayoutX() + GameParam.SLOW_SPEED);
+			} else {
+				game.getPlayerImageView().setLayoutX(game.getPlayerImageView().getLayoutX() + GameParam.DEFAULT_SPEED);
+				game.getPlayerHitBox().setLayoutX(game.getPlayerHitBox().getLayoutX() + GameParam.DEFAULT_SPEED);
+			}
 		}
 	}
 	

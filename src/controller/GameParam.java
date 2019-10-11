@@ -11,13 +11,14 @@ public final class GameParam {
 	// Status
 	public final static int LIFE_LEFT = 1;
 	public final static int NO_LIFE_LEFT = 2;
+	public final static int RESPAWN_IMMUNITY_TIME = 60 * 2;
 	
 	// Life
 	public final static int DEFAULT_LIFE = 3;
 	
 	// Player Speed
 	public final static double DEFAULT_SPEED = 3;
-	public final static double SLOW_SPEED = 0.9;
+	public final static double SLOW_SPEED = 1.8;
 	
 	// Player Bullet
 

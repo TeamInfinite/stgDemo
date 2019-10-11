@@ -3,29 +3,21 @@ package gui;
 
 import java.util.Iterator;
 
+import controller.GameParam;
 import controller.MainController;
 import javafx.animation.AnimationTimer;
-import javafx.animation.PathTransition;
-import javafx.animation.PathTransition.OrientationType;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.CubicCurveTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import model.Bullet;
-import model.BulletOld;
 import model.EBullet;
-import model.EnemyOld;
 import model.Enemy;
-import model.GameComp;
 import model.PlayerImpl;
-import model.Turret;
 import model.bullets.PBullet;
 
 public class ViewManager {
@@ -160,9 +152,17 @@ public class ViewManager {
 	
 	private void initPlayer() {
 		ImageView player = controller.getGame().getPlayerImageView();
+		Rectangle hitBox = controller.getGame().getPlayerHitBox();
+		
 		player.setLayoutX(Param.SPAWN_POS_X);
 		player.setLayoutY(Param.SPAWN_POS_Y);
-		gamePane.getPane().getChildren().addAll(player);
+		hitBox.setLayoutX(Param.SPAWN_POS_X + 16.5);
+		hitBox.setLayoutY(Param.SPAWN_POS_Y + 22);
+		hitBox.setFill(Color.RED);
+		
+		controller.getGame().setImmunity(GameParam.RESPAWN_IMMUNITY_TIME);
+		
+		gamePane.getPane().getChildren().addAll(player, hitBox);
 		
 	}
 	
@@ -196,7 +196,7 @@ public class ViewManager {
 					
 					//System.out.println(controller.getGame().isTimeStoped());
 					
-					checkBoundary();
+					// checkBoundary();
 					checkSuicide();
 					playerFire();
 					removeDead();
@@ -216,6 +216,7 @@ public class ViewManager {
 		if(controller.isMovingLeft()) controller.moveLeft();
 		if(controller.isMovingRight()) controller.moveRight();
 		if((!controller.isMovingLeft() && !controller.isMovingRight()) || (controller.isMovingLeft() && controller.isMovingRight())) controller.getGame().getPlayerImageView().setImage(new Image(PlayerImpl.IMG_ADDR));
+		// System.out.println(controller.getGame().getPlayerHitBox().getLayoutX() + " " + controller.getGame().getPlayerHitBox().getLayoutY() + " " + controller.getGame().getPlayerImageView().getLayoutX() + " " + controller.getGame().getPlayerImageView().getLayoutY());
 	}
 	
 	private void bulletsMove() {
@@ -251,24 +252,15 @@ public class ViewManager {
 		for(EBullet eb : controller.getGame().geteBullets()) {
 			eb.move();
 			eb.suiciding();
-			if(eb.getImageView().getBoundsInParent().intersects(controller.getGame().getPlayerImageView().getBoundsInParent())) {
-				eb.suicide();
-				killPlayer();
-				initPlayer();
-				controller.getGame().playerDead(scorePane);
+			if(controller.getGame().getImmunity() == 0) {
+				if(eb.getHitBox().getBoundsInParent().intersects(controller.getGame().getPlayerHitBox().getBoundsInParent())) {
+					eb.suicide();
+					killPlayer();
+					initPlayer();
+					controller.getGame().playerDead(scorePane);
+				}
 			}
 		}
-	}
-	
-	private void checkBoundary() {
-		ImageView player = controller.getGame().getPlayerImageView();
-		double posX = player.getTranslateX() + player.getLayoutX();
-		double posY = player.getTranslateY() + player.getLayoutY();
-		
-		if(posX < 0) player.setLayoutX(player.getLayoutX() - posX);
-		if(posX > Param.GAME_PANE_WIDTH - player.getImage().getWidth()) player.setLayoutX(player.getLayoutX() - (posX - Param.GAME_PANE_WIDTH) - player.getImage().getWidth());
-		if(posY < 0) player.setLayoutY(player.getLayoutY() - posY);
-		if(posY > Param.GAME_PANE_HEIGHT - player.getImage().getHeight()) player.setLayoutY(player.getLayoutY() - (posY - Param.GAME_PANE_HEIGHT + player.getImage().getHeight()));
 	}
 	
 	private void checkSuicide() {
@@ -309,6 +301,7 @@ public class ViewManager {
 			EBullet eb = eBIterator.next();
 			if(eb.getHp() <= 0) {
 				gamePane.getPane().getChildren().remove(eb.getImageView());
+				gamePane.getPane().getChildren().remove(eb.getHitBox());
 				eBIterator.remove();
 			}
 		}
@@ -336,6 +329,7 @@ public class ViewManager {
 	
 	private void killPlayer() {
 		gamePane.getPane().getChildren().remove(controller.getGame().getPlayerImageView());
+		gamePane.getPane().getChildren().remove(controller.getGame().getPlayerHitBox());
 	}
 	
 	// == getters ==

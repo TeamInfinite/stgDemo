@@ -30,8 +30,10 @@ public class Turret {
 			
 			e.getImageView().setLayoutX(source.getImageView().getLayoutX() + source.getFirePosX());
 			e.getImageView().setLayoutY(source.getImageView().getLayoutY() + source.getFirePosY());
+			e.getHitBox().setLayoutX(source.getImageView().getLayoutX() + source.getFirePosX() + 8.2);
+			e.getHitBox().setLayoutY(source.getImageView().getLayoutY() + source.getFirePosY() + 9);
 			game.geteBullets().add(e);
-			gamePane.getPane().getChildren().add(e.getImageView());
+			gamePane.getPane().getChildren().addAll(e.getImageView(), e.getHitBox());
 		}
 	}
 	

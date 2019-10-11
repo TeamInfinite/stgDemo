@@ -47,23 +47,16 @@ public class ESquare extends Enemy {
 	public void setTurret() {
 		
 		ArrayList<double[]> temp = new ArrayList<>();
-		double[] t1 = {0.45, 4};
+		double[] t1 = {0.8, 4};
 		double[] t2 = {0, 4};
-		double[] t3 = {-0.45, 4};
+		double[] t3 = {-0.8, 4};
 		temp.add(t1);
 		temp.add(t2);
 		temp.add(t3);
 		
-		turret.offer(new Turret(100, 1, temp));
-		turret.offer(new Turret(150, 1, temp));
-		turret.offer(new Turret(200, 1, temp));
-		turret.offer(new Turret(250, 1, temp));
-		turret.offer(new Turret(300, 1, temp));
-		turret.offer(new Turret(350, 1, temp));
-		turret.offer(new Turret(400, 1, temp));
-		turret.offer(new Turret(450, 1, temp));
-		turret.offer(new Turret(500, 1, temp));
-		turret.offer(new Turret(550, 1, temp));
+		for(int i = 0; i <= 20; i++) {
+			turret.offer(new Turret(100 + i * 20, 1, temp));
+		}
 	}
 
 }
