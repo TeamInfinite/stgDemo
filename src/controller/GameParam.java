@@ -3,7 +3,7 @@ package controller;
 public final class GameParam {
 	
 	// Test Mode
-	public final static boolean TEST_MODE = false;
+	public final static boolean TEST_MODE = true;
 	
 	// Timer
 	public final static int RESET_POINT = 60 * 60 * 20;
