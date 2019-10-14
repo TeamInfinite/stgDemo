@@ -14,7 +14,6 @@ import model.Enemy;
 import model.EnemySpawn;
 import model.PlayerImpl;
 import model.TimeStop;
-import model.enemies.ESquare;
 
 public class Game {
 	
@@ -23,12 +22,12 @@ public class Game {
 	private int life;
 	private int lifePart;
 	private int immunity;
+	private int respawning = 0;
 	private TimeStop timeStop = new TimeStop();
 	
 	private int timer = 0;
 	private boolean isRunning = false;
 	
-	private boolean isGameOver;
 	private Player player;
 	private ArrayList<Enemy> enemies = new ArrayList<>();
 	private ArrayList<Bullet> bullets = new ArrayList<>();
@@ -123,9 +122,14 @@ public class Game {
 			return GameParam.NO_LIFE_LEFT;
 		}
 		
+		respawning = GameParam.RESPAWNING_TIME;
+		
 		return GameParam.LIFE_LEFT;
 	}
 	
+	public void respawning() {
+		respawning --;
+	}
 	
 	// == getters ==
 	public ImageView getPlayerImageView() {
@@ -178,5 +182,9 @@ public class Game {
 
 	public void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
+	}
+
+	public int getRespawning() {
+		return respawning;
 	}
 }

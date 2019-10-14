@@ -16,11 +16,14 @@ public abstract class Enemy extends GameComp {
 	protected double firePosX;
 	protected double firePosY;
 	
-	public Enemy(String imgAddress, double scale, int score) {
+	public Enemy(String imgAddress, double scale, int score, String turretAddr, String ePathAddr) {
 		super(imgAddress, scale);
 		
 		this.score = score;
-		setEPath();
+		setEPath(EPath.load(ePathAddr));
+		setTurret(Turret.readFile(turretAddr));
+		
+		// TODO delete later
 		setTurret();
 		
 		if(turret.peek() != null) {
@@ -60,6 +63,10 @@ public abstract class Enemy extends GameComp {
 	
 	public void setEPath(LinkedList<EPath> path) {
 		this.path = path;
+	}
+	
+	public void setTurret(LinkedList<Turret> turret) {
+		this.turret = turret;
 	}
 	
 	// == setters and getters ==

@@ -42,17 +42,20 @@ public class EnemySpawn {
 	}
 	
 	public static LinkedList<EnemySpawn> loadFile(String addr) {
+		if(addr == null) return new LinkedList<>();
+		
 		LinkedList<EnemySpawn> level = new LinkedList<>();
 		Scanner scan = null;
 		
 		try {
 			scan = new Scanner(new File(addr));
-		} catch(FileNotFoundException e) {
 			while(scan.hasNext()) {
 				String line = scan.nextLine();
 				
 				level.add(translate());
 			}
+		} catch(FileNotFoundException e) {
+			
 		} finally {
 			scan.close();
 		}
@@ -60,6 +63,7 @@ public class EnemySpawn {
 		return level;
 	}
 	
+	// TODO implement later
 	public static EnemySpawn translate() {
 		return null;
 	}

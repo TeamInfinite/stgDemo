@@ -73,13 +73,13 @@ public class MainController {
 	}
 	
 	public void fire() {
-		if(isFiring) {
+		if(game.getRespawning() == 0 && isFiring) {
 			PBullet pb = new PBullet();
-			pb.getImageView().setLayoutX(game.getPlayerImageView().getLayoutX() + 20);
+			pb.getImageView().setLayoutX(game.getPlayerImageView().getLayoutX() + 10);
 			if(game.getTimer() % 2 == 0)
-				pb.getImageView().setLayoutY(game.getPlayerImageView().getLayoutY() + 18);
+				pb.getImageView().setLayoutY(game.getPlayerImageView().getLayoutY() + 8);
 			else
-				pb.getImageView().setLayoutY(game.getPlayerImageView().getLayoutY() + 30);
+				pb.getImageView().setLayoutY(game.getPlayerImageView().getLayoutY() + 20);
 			game.getBullets().add(pb);
 		}
 	}

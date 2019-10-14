@@ -4,14 +4,16 @@ package gui;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import test.TestPane;
 
 public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		ViewManager vm = new ViewManager();
+		SceneManager sc = new SceneManager();
+		sc.setInitialPane(new TestPane(sc));
 		
-		stage = vm.getStage();
+		stage = sc.getStage();
 		stage.show();
 	}
 	

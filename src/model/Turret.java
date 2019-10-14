@@ -41,6 +41,8 @@ public class Turret {
 	}
 	
 	public static LinkedList<Turret> readFile(String addr) {
+		if(addr == null) return new LinkedList<>();
+		
 		LinkedList<Turret> turret = new LinkedList<>();
 		Scanner scan = null;
 		
@@ -58,6 +60,7 @@ public class Turret {
 		return turret;
 	}
 	
+	// TODO implement later
 	public static Turret translate() {
 		return null;
 	}

@@ -2,7 +2,6 @@ package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -19,6 +18,8 @@ public class EPath {
 	}
 	
 	public static LinkedList<EPath> load(String addr){
+		if(addr == null) return new LinkedList<>();
+		
 		LinkedList<EPath> temp = new LinkedList<>();
 		Scanner scan = null;
 		
@@ -60,8 +61,6 @@ public class EPath {
 				tempPosition.addX(oriX);
 				tempPosition.addY(oriY);
 				result.offer(tempPosition);
-				
-				// System.out.println(tempPosition.getX() + " " + tempPosition.getY());
 			}
 		} else if (type.equals("TC")) {
 			

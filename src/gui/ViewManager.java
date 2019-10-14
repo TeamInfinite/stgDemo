@@ -1,44 +1,33 @@
 package gui;
 
-
-import java.util.Iterator;
-
 import controller.GameParam;
 import controller.MainController;
-import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import model.Bullet;
-import model.EBullet;
 import model.Enemy;
-import model.PlayerImpl;
-import model.bullets.PBullet;
+import model.GameLoop;
 
 public class ViewManager {
 	
 	// == fields ==
-	private Stage stage;
 	private Scene scene;
 	private AnchorPane pane;
 	private GamePaneManager gamePane;
 	private ScorePaneManager scorePane;
 	private Label fps;
-	private AnimationTimer gameLoop;
-	
-	private long startTime = 0;
 	
 	private MainController controller = new MainController();
+	private GameLoop loop;
 	
 	// == constructor ==
-	public ViewManager() {
+	public ViewManager(SceneManager sc) {
+		scene = sc.getScene();
 		
-		initStage();
+		initPane();
 		initBackground();
 		initGamePane();
 		initScorePane();
@@ -56,14 +45,8 @@ public class ViewManager {
 	}
 
 	// == init methods ==
-	private void initStage() {
+	private void initPane() {
 		pane = new AnchorPane();
-		scene = new Scene(pane, Param.MAIN_PANE_WIDTH, Param.MAIN_PANE_HEIGHT);
-		stage = new Stage();
-		
-		stage.setTitle(Param.GUI_TITLE);
-		stage.setScene(scene);
-		stage.setResizable(false);
 	}
 	
 	private void initBackground() {
@@ -158,7 +141,7 @@ public class ViewManager {
 		
 	}
 	
-	private void initPlayer() {
+	public void initPlayer() {
 		ImageView player = controller.getGame().getPlayerImageView();
 		Rectangle hitBox = controller.getGame().getPlayerHitBox();
 		
@@ -185,174 +168,22 @@ public class ViewManager {
 	}
 	
 	private void initGameLoop() {
-		gameLoop = new AnimationTimer() {
-			
-			private long lastUpdate = 0 ;
-			@Override
-			public void handle(long now) {
-				
-				if(controller.getGame().isRunning() && now - lastUpdate >= 8_000_000) {
-					playerMove();
-					bulletsMove();
-					
-					if(controller.getGame().isTimeStoped()) {
-						controller.getGame().moveTimeStopTimer();
-					} else {
-						controller.getGame().moveTimer();
-						enemySpawn();
-						enemiesMove();
-						enemiesFire();
-						eBulletsMove();
-					}
-					
-					//System.out.println(controller.getGame().isTimeStoped());
-					
-					// checkBoundary();
-					checkSuicide();
-					playerFire();
-					removeDead();
-				}
-				refreshFps(30);
-				lastUpdate = now ;
-			}
-
-		};
-		
-		gameLoop.start();
-	}
-	
-	// == game loop methods ==
-	private void enemySpawn() {
-		controller.getGame().enemySpawn(gamePane);
-	}
-	
-	private void playerMove() {
-		if(controller.isMovingUp()) controller.moveUp();
-		if(controller.isMovingDown()) controller.moveDown();
-		if(controller.isMovingLeft()) controller.moveLeft();
-		if(controller.isMovingRight()) controller.moveRight();
-		if((!controller.isMovingLeft() && !controller.isMovingRight()) || (controller.isMovingLeft() && controller.isMovingRight())) controller.getGame().getPlayerImageView().setImage(new Image(PlayerImpl.IMG_ADDR));
-		// System.out.println(controller.getGame().getPlayerHitBox().getLayoutX() + " " + controller.getGame().getPlayerHitBox().getLayoutY() + " " + controller.getGame().getPlayerImageView().getLayoutX() + " " + controller.getGame().getPlayerImageView().getLayoutY());
-	}
-	
-	private void bulletsMove() {
-		for(Bullet b : controller.getGame().getBullets()) {
-			if(!gamePane.getPane().getChildren().contains(b.getImageView())) {
-				gamePane.getPane().getChildren().add(b.getImageView());
-			}
-			b.suiciding();
-			b.getImageView().setTranslateY(b.getImageView().getTranslateY() - PBullet.BULLET_SPEED);
-			for(Enemy e : controller.getGame().getEnemies()) {
-				if(b.getImageView().getBoundsInParent().intersects(e.getImageView().getBoundsInParent())) {
-					b.suicide();
-					e.lostHp(b.getPower());
-				}
-			}
-		}
-	}
-	
-	private void enemiesFire() {
-		for(Enemy e : controller.getGame().getEnemies()) {
-			e.fire(gamePane, controller.getGame());
-		}
-	}
-	
-	private void enemiesMove() {
-		for(Enemy e : controller.getGame().getEnemies()) {
-			e.move();
-			// System.out.println(e.getImageView().getLayoutX() + " " + e.getImageView().getLayoutY());
-		}
-	}
-	
-	private void eBulletsMove() {
-		for(EBullet eb : controller.getGame().geteBullets()) {
-			eb.move();
-			eb.suiciding();
-			if(controller.getGame().getImmunity() == 0) {
-				if(eb.getHitBox().getBoundsInParent().intersects(controller.getGame().getPlayerHitBox().getBoundsInParent())) {
-					eb.suicide();
-					killPlayer();
-					initPlayer();
-					controller.getGame().playerDead(scorePane);
-				}
-			}
-		}
-	}
-	
-	private void checkSuicide() {
-		for(Enemy e : controller.getGame().getEnemies()) {
-			if(controller.getGame().getPlayerHitBox().getBoundsInParent().intersects(e.getImageView().getBoundsInParent())) {
-				killPlayer();
-				initPlayer();
-			}
-		}
-	}
-	
-	private void removeDead() {
-		Iterator<Bullet> iterator = controller.getGame().getBullets().iterator();
-		
-		while(iterator.hasNext()) {
-			Bullet bullet = iterator.next();
-			if(bullet.getHp() <= 0) {
-				gamePane.getPane().getChildren().remove(bullet.getImageView());
-				iterator.remove();
-			}
-		}
-		
-		Iterator<Enemy> eIterator = controller.getGame().getEnemies().iterator();
-		
-		while(eIterator.hasNext()) {
-			Enemy e = eIterator.next();
-			if(e.getHp() <= 0) {
-				gamePane.getPane().getChildren().remove(e.getImageView());
-				eIterator.remove();
-				
-				if(e.getHp() != -10) {
-					controller.getGame().score(e.getScore());
-					scorePane.refreshScore();
-				}
-			}
-		}
-		
-		Iterator<EBullet> eBIterator = controller.getGame().geteBullets().iterator();
-		
-		while(eBIterator.hasNext()) {
-			EBullet eb = eBIterator.next();
-			if(eb.getHp() <= 0) {
-				gamePane.getPane().getChildren().remove(eb.getImageView());
-				gamePane.getPane().getChildren().remove(eb.getHitBox());
-				eBIterator.remove();
-			}
-		}
-	}
-	
-	private void refreshFps(int frameSpin) {
-		if(controller.getGame().getTimer() % frameSpin == 0) {
-			fps.setText("" + fpsCalculate(frameSpin));
-		}
-	}
-	
-	private void playerFire() {
-		controller.fire();
+		loop = new GameLoop(controller, gamePane, scorePane, this);
+		loop.start();
 	}
 	
 	// == others ==
-	private double fpsCalculate(long frameSpin) {
-		long elapseTime = System.nanoTime() - startTime;
-		startTime = System.nanoTime();
-		double second = (double)elapseTime / 1000000000;
-		
-		double frame = frameSpin / second;
-		return frame;
-	}
-	
-	private void killPlayer() {
+	public void killPlayer() {
 		gamePane.getPane().getChildren().remove(controller.getGame().getPlayerImageView());
 		gamePane.getPane().getChildren().remove(controller.getGame().getPlayerHitBox());
 	}
 	
 	// == getters ==
-	public Stage getStage() {
-		return stage;
+	public AnchorPane getPane() {
+		return pane;
+	}
+	
+	public Label getFps() {
+		return fps;
 	}
 }

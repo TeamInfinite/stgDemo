@@ -18,19 +18,13 @@ public class ESquare extends Enemy {
 	
 	// == fields ==
 	public ESquare() {
-		super(IMG_ADDR, 1, SCORE);
-		
-		testSetting();
-		
+		// TODO add turret
+		super(IMG_ADDR, 1, SCORE, null, PATH_ADDR);
+
 		hp = 20;
 		
 		firePosX = FIRE_POS_X;
 		firePosY = FIRE_POS_Y;
-	}
-	
-	private void testSetting() {
-		
-		
 	}
 
 	@Override
@@ -58,8 +52,8 @@ public class ESquare extends Enemy {
 		temp.add(t2);
 		temp.add(t3);
 		
-		for(int i = 0; i <= 60; i++) {
-			turret.offer(new Turret(30 + i * 20, 1, temp));
+		for(int i = 0; i <= 20; i++) {
+			turret.offer(new Turret(60 + i * 60, 1, temp));
 		}
 	}
 

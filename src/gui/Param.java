@@ -16,7 +16,7 @@ public final class Param {
 	public final static double SCORE_PANE_HEIGHT = 480;
 	
 	// Player Image View
-	public final static double SPAWN_POS_X = 210;
+	public final static double SPAWN_POS_X = 160;
 	public final static double SPAWN_POS_Y = 400;
 	
 	private Param() {}
