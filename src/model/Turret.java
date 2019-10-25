@@ -12,17 +12,27 @@ import gui.GamePaneManager;
 //[
 public class Turret {
 	
+	private int fireType;
 	private int fireTime;
 	private int bulletType;
 	private ArrayList<double[]> bulletsPos;
 	
-	public Turret(int fireTime, int bulletType, ArrayList<double[]> bulletsPos) {
+	public Turret(int fireType, int fireTime, int bulletType, ArrayList<double[]> bulletsPos) {
+		this.fireType = fireType;
 		this.fireTime = fireTime;
 		this.bulletType = bulletType;
 		this.bulletsPos = bulletsPos;
 	}
 	
 	public static void fire(Enemy source, Turret turret, GamePaneManager gamePane, Game game) {
+		if(turret.getFireType() == 1) {
+			fireNormal(source, turret, gamePane, game);
+		} else if(turret.getFireType() == 2) {
+			
+		}
+	}
+	
+	public static void fireNormal(Enemy source, Turret turret, GamePaneManager gamePane, Game game) {
 		for(double[] pos : turret.getBulletsPos()) {
 			EBullet e = null;
 			switch(turret.getBulletType()) {
@@ -38,6 +48,10 @@ public class Turret {
 			game.geteBullets().add(e);
 			gamePane.getPane().getChildren().addAll(e.getImageView(), e.getHitBox());
 		}
+	}
+	
+	public static void fireScreen(Enemy source, Turret turret, GamePaneManager gamePane, Game game) {
+		
 	}
 	
 	public static LinkedList<Turret> readFile(String addr) {
@@ -75,5 +89,9 @@ public class Turret {
 
 	public ArrayList<double[]> getBulletsPos() {
 		return bulletsPos;
+	}
+	
+	public int getFireType() {
+		return fireType;
 	}
 }

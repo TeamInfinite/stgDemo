@@ -15,7 +15,6 @@ public class TimeStop {
 	
 	public void moveTimer() {
 		timer--;
-		System.out.println(timer);
 		if(timer == 0) {
 			stoped = false;
 		}

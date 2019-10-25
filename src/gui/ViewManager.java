@@ -2,6 +2,7 @@ package gui;
 
 import controller.GameParam;
 import controller.MainController;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -10,11 +11,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import model.Enemy;
 import model.GameLoop;
+import model.Loading;
 
-public class ViewManager {
+public class ViewManager implements Loading {
 	
 	// == fields ==
-	private Scene scene;
+	private SceneManager sm;
 	private AnchorPane pane;
 	private GamePaneManager gamePane;
 	private ScorePaneManager scorePane;
@@ -24,9 +26,12 @@ public class ViewManager {
 	private GameLoop loop;
 	
 	// == constructor ==
-	public ViewManager(SceneManager sc) {
-		scene = sc.getScene();
-		
+	public ViewManager(SceneManager sm) {
+		this.sm = sm;
+	}
+	
+	@Override
+	public void loading() {
 		initPane();
 		initBackground();
 		initGamePane();
@@ -36,8 +41,9 @@ public class ViewManager {
 		initPlayer();
 		initEnemy();
 		initGameLoop();
-		testSitting();
 		
+		Platform.runLater(() -> sm.setRoot(getPane()));
+		testSitting();
 	}
 
 	private void testSitting() {
@@ -57,7 +63,7 @@ public class ViewManager {
 	}
 	
 	private void initGamePane() {
-		gamePane = new GamePaneManager(controller);
+		gamePane = new GamePaneManager(sm, controller);
 		gamePane.getPane().setLayoutX(10);
 		gamePane.getPane().setLayoutY(10);
 		pane.getChildren().add(gamePane.getPane());
@@ -65,7 +71,7 @@ public class ViewManager {
 	
 	private void initScorePane() {
 		scorePane = new ScorePaneManager(controller);
-		scorePane.getPane().setLayoutX(Param.GAME_PANE_WIDTH + 20);
+		scorePane.getPane().setLayoutX(PaneParam.GAME_PANE_WIDTH + 20);
 		scorePane.getPane().setLayoutY(0);
 		pane.getChildren().add(scorePane.getPane());
 	}
@@ -79,8 +85,19 @@ public class ViewManager {
 	}
 	
 	private void initKeys() {
-		scene.setOnKeyPressed(e -> {
+		pane.setOnKeyPressed(e -> {
 			switch(e.getCode()) {
+			case ENTER:
+				if(controller.getGame().isInDialog()) {
+					if(gamePane.hasNextDialog())
+						gamePane.showDialog();
+					else{
+						gamePane.removeDialog();
+						controller.getGame().setRunning(true);
+						controller.getGame().setInDialog(false);
+					}
+				}
+				break;
 			case UP:
 				controller.setMovingUp(true);
 				break;
@@ -104,7 +121,7 @@ public class ViewManager {
 			}
 		});
 		
-		scene.setOnKeyReleased(e -> {
+		pane.setOnKeyReleased(e -> {
 			switch(e.getCode()) {
 			case UP:
 				controller.setMovingUp(false);
@@ -124,15 +141,22 @@ public class ViewManager {
 			case Z:
 				controller.setFiring(false);
 				break;
+			case X:
+				controller.getGame().bomb();
+				scorePane.refreshBomb();
+				break;
 			case A:
 				controller.getGame().timeStop();
 				break;
 			case ESCAPE:
-				if(controller.getGame().isRunning())
+				if(controller.getGame().isRunning()) {
 					controller.getGame().setRunning(false);
-				else
+					controller.getGame().getPlayerImageView().setOpacity(1);
+					gamePane.showPausePane();
+				} else {
 					controller.getGame().setRunning(true);
-				System.out.println(controller.getGame().isRunning());
+					gamePane.removePausePane();
+				}
 				break;
 			default:
 				break;
@@ -145,16 +169,17 @@ public class ViewManager {
 		ImageView player = controller.getGame().getPlayerImageView();
 		Rectangle hitBox = controller.getGame().getPlayerHitBox();
 		
-		player.setLayoutX(Param.SPAWN_POS_X);
-		player.setLayoutY(Param.SPAWN_POS_Y);
-		hitBox.setLayoutX(Param.SPAWN_POS_X + 16.5);
-		hitBox.setLayoutY(Param.SPAWN_POS_Y + 22);
+		player.setLayoutX(PaneParam.SPAWN_POS_X);
+		player.setLayoutY(PaneParam.SPAWN_POS_Y);
+		hitBox.setLayoutX(PaneParam.SPAWN_POS_X + 16.5);
+		hitBox.setLayoutY(PaneParam.SPAWN_POS_Y + 22);
 		
 		hitBox.setFill(Color.RED);
 		if(!GameParam.TEST_MODE)
 			hitBox.setOpacity(0);
 		
-		controller.getGame().setImmunity(GameParam.RESPAWN_IMMUNITY_TIME);
+		if(!GameParam.IMMUNITY_MODE)
+			controller.getGame().setImmunity(GameParam.RESPAWN_IMMUNITY_TIME);
 		
 		gamePane.getPane().getChildren().addAll(player, hitBox);
 		

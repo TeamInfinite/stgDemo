@@ -8,9 +8,11 @@ import java.util.Scanner;
 import controller.Game;
 import gui.GamePaneManager;
 import model.enemies.ESquare;
+import model.enemies.ETest;
+import model.enemies.ETest2;
 
 // 
-public class EnemySpawn {
+public class EnemySpawn implements Level {
 	
 	private int spawnTime;
 	private int enemyType;
@@ -28,6 +30,12 @@ public class EnemySpawn {
 		switch(enemyType) {
 		case 1: 
 			e = new ESquare();
+			break;
+		case 2: 
+			e = new ETest();
+			break;
+		case 3: 
+			e = new ETest2();
 			break;
 		default :
 			break;

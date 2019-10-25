@@ -2,6 +2,7 @@ package model;
 
 import java.util.Iterator;
 
+import controller.GameParam;
 import controller.MainController;
 import gui.GamePaneManager;
 import gui.ScorePaneManager;
@@ -43,6 +44,7 @@ public class GameLoop extends AnimationTimer{
 			
 			if(controller.getGame().isTimeStoped()) {
 				controller.getGame().moveTimeStopTimer();
+				controller.getGame().getPlayerImageView().setOpacity(1);
 			} else {
 				controller.getGame().moveTimer();
 				enemySpawn();
@@ -103,10 +105,13 @@ public class GameLoop extends AnimationTimer{
 			eb.move();
 			eb.suiciding();
 			if(controller.getGame().getImmunity() == 0) {
-				if(eb.getHitBox().getBoundsInParent().intersects(controller.getGame().getPlayerHitBox().getBoundsInParent())) {
+				if(controller.getGame().getRespawning() == 0 && eb.getHitBox().getBoundsInParent().intersects(controller.getGame().getPlayerHitBox().getBoundsInParent())) {
 					eb.suicide();
 					viewManager.killPlayer();
-					controller.getGame().playerDead(scorePane);
+					int result = controller.getGame().playerDead(scorePane);
+					if(result == GameParam.NO_LIFE_LEFT) {
+						gamePane.showGameOverPane();
+					}
 				}
 			}
 		}

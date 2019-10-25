@@ -8,10 +8,12 @@ import gui.ScorePaneManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import model.Bullet;
+import model.DialogLevel;
 import model.EBullet;
 import model.Player;
 import model.Enemy;
 import model.EnemySpawn;
+import model.Level;
 import model.PlayerImpl;
 import model.TimeStop;
 
@@ -21,19 +23,22 @@ public class Game {
 	private int score;
 	private int life;
 	private int lifePart;
+	private int bomb = GameParam.INIT_BOMB_CAPACITY;
+	private int power = 3;
 	private int immunity;
 	private int respawning = 0;
 	private TimeStop timeStop = new TimeStop();
 	
 	private int timer = 0;
-	private boolean isRunning = false;
+	private boolean running = false;
+	private boolean inDialog = false;
 	
 	private Player player;
 	private ArrayList<Enemy> enemies = new ArrayList<>();
 	private ArrayList<Bullet> bullets = new ArrayList<>();
 	private ArrayList<EBullet> eBullets = new ArrayList<>();
-	private LinkedList<EnemySpawn> level = new LinkedList<>();
-	private EnemySpawn next;
+	private LinkedList<Level> level = new LinkedList<>();
+	private Level next;
 	
 	public Game() {
 		life = GameParam.DEFAULT_LIFE;
@@ -45,13 +50,27 @@ public class Game {
 		if(level.peek() != null) {
 			next = level.poll();
 		}
+		
+		if(GameParam.IMMUNITY_MODE) {
+			immunity = -1;
+		}
 	}
 	
 	private void test() {
 		for(int i = 0 ; i < 5; i++) {
 			level.offer(new EnemySpawn(100 + 50 * i, 1, "default"));
-			level.offer(new EnemySpawn(125 + 50 * i, 1, "src\\resources\\path\\test2.txt"));
 		}
+		
+		for(int i = 0 ; i < 5; i++) {
+			level.offer(new EnemySpawn(350 + 50 * i, 1, "src\\resources\\path\\test2.txt"));
+		}
+		
+		level.offer(new DialogLevel(20, 20, "/resources/testImage.jpg", "啊我是驴", 850));
+		level.offer(new DialogLevel(20, 20, "/resources/testImage.jpg", "小驴子冲击！", 0));
+		
+		level.offer(new EnemySpawn(900, 2, "src\\resources\\path\\test3.txt"));
+		level.offer(new EnemySpawn(1200, 3, "src\\resources\\path\\test4.txt"));
+		// level.offer(new EnemySpawn(1201, 3, "src\\resources\\path\\test5.txt"));
 	}
 
 	// == init methods ==
@@ -66,10 +85,22 @@ public class Game {
 	// == public methods ==
 	public void enemySpawn(GamePaneManager gamePane) {
 		if(next.getSpawnTime() == timer) {
-			EnemySpawn.spawn(next.getEnemyType(), gamePane, this, next.getAddr());
-		
-			if(level.peek() != null) {
-				next = level.poll();
+			if(next instanceof DialogLevel) {
+				while(next instanceof DialogLevel) {
+					gamePane.addDialog(((DialogLevel) next).getX(), ((DialogLevel) next).getY(), ((DialogLevel) next).getImageAddr(), ((DialogLevel) next).getText());
+					if(level.peek() != null) {
+						next = level.poll();
+					}
+				}
+				running = false;
+				inDialog = true;
+				gamePane.showDialog();
+				
+			} else if(next instanceof EnemySpawn){
+				EnemySpawn.spawn(((EnemySpawn) next).getEnemyType(), gamePane, this, ((EnemySpawn) next).getAddr());
+				if(level.peek() != null) {
+					next = level.poll();
+				}
 			}
 		}
 	}
@@ -83,7 +114,7 @@ public class Game {
 	}
 	
 	public void start() {
-		isRunning = true;
+		running = true;
 	}
 	
 	public void resetTimer() {
@@ -119,16 +150,35 @@ public class Game {
 		scorePane.refreshLife();
 		
 		if(life == 0) {
+			running = false;
 			return GameParam.NO_LIFE_LEFT;
 		}
 		
 		respawning = GameParam.RESPAWNING_TIME;
+		clearEnemyBullets();
+		power = 1;
 		
 		return GameParam.LIFE_LEFT;
 	}
 	
 	public void respawning() {
 		respawning --;
+	}
+	
+	public void clearEnemyBullets() {
+		for(EBullet eb : eBullets) {
+			eb.suicide();
+		}
+	}
+	
+	public void bomb() {
+		if(bomb > 0) {
+			bomb--;
+			clearEnemyBullets();
+			for(Enemy e : enemies) {
+				e.lostHp(GameParam.BOMB_DAMAGE);
+			}
+		}
 	}
 	
 	// == getters ==
@@ -177,14 +227,38 @@ public class Game {
 	}
 
 	public boolean isRunning() {
-		return isRunning;
+		return running;
 	}
 
 	public void setRunning(boolean isRunning) {
-		this.isRunning = isRunning;
+		this.running = isRunning;
 	}
 
 	public int getRespawning() {
 		return respawning;
+	}
+
+	public int getPower() {
+		return power;
+	}
+
+	public void setPower(int power) {
+		this.power = power;
+	}
+
+	public int getBomb() {
+		return bomb;
+	}
+
+	public void setBomb(int bomb) {
+		this.bomb = bomb;
+	}
+
+	public boolean isInDialog() {
+		return inDialog;
+	}
+
+	public void setInDialog(boolean inDialog) {
+		this.inDialog = inDialog;
 	}
 }
