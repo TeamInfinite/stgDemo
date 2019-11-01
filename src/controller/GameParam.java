@@ -4,7 +4,7 @@ public final class GameParam {
 	
 	// Mode
 	public final static boolean TEST_MODE = true;
-	public final static boolean IMMUNITY_MODE = true;
+	public final static boolean IMMUNITY_MODE = false;
 	public final static boolean INFINITE_LIFE_MODE = true;
 	
 	// Timer
@@ -14,7 +14,7 @@ public final class GameParam {
 	public final static int TIME_STOP_LENGTH = 60 * 3;
 	
 	// Status
-	public final static int LIFE_LEFT = 1;
+	public final static int LIFE_LEFT = 3;
 	public final static int NO_LIFE_LEFT = 2;
 	public final static int RESPAWN_IMMUNITY_TIME = 60 * 2;
 	public final static int RESPAWNING_TIME = 30;

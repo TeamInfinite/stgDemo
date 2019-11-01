@@ -57,19 +57,10 @@ public class Game {
 	}
 	
 	private void test() {
-		for(int i = 0 ; i < 5; i++) {
-			level.offer(new EnemySpawn(100 + 50 * i, 1, "default"));
-		}
-		
-		for(int i = 0 ; i < 5; i++) {
-			level.offer(new EnemySpawn(350 + 50 * i, 1, "src\\resources\\path\\test2.txt"));
-		}
-		
-		level.offer(new DialogLevel(20, 20, "/resources/testImage.jpg", "啊我是驴", 850));
+		level.offer(new DialogLevel(20, 20, "/resources/testImage.jpg", "啊我是驴", 100));
 		level.offer(new DialogLevel(20, 20, "/resources/testImage.jpg", "小驴子冲击！", 0));
 		
-		level.offer(new EnemySpawn(900, 2, "src\\resources\\path\\test3.txt"));
-		level.offer(new EnemySpawn(1200, 3, "src\\resources\\path\\test4.txt"));
+		level.offer(new EnemySpawn(200, 1, "src\\resources\\path\\test3.txt"));
 		// level.offer(new EnemySpawn(1201, 3, "src\\resources\\path\\test5.txt"));
 	}
 
