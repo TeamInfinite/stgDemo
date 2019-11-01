@@ -51,5 +51,4 @@ public class ESquare extends Enemy {
 			turret.offer(new Turret(1, 20 + i * 3, 1, temp1));
 		}
 	}
-
 }
