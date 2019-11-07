@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class GameSetting {
 	
 	public static boolean fullScreen = false;
+	public static double bulletTransparency = 0.5;
 	
 	public static void save() {
 		PrintWriter writer = null;

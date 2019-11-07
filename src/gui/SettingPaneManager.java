@@ -44,9 +44,9 @@ public class SettingPaneManager implements Loading {
 		}
 		
 		public void deselected() {
-			back.setOpacity(0.3);
+			back.setOpacity(0.1);
 			String str = option.getText();
-			option.setText(str.substring(1, str.length() - 1));
+			option.setText(str.substring(2, str.length() - 2));
 		}
 		
 		abstract public void change();
@@ -63,6 +63,7 @@ public class SettingPaneManager implements Loading {
 	private ArrayList<SettingMenu> choices;
 	private int curr = 0;
 	private SettingMenu fullScreen;
+	private SettingMenu bulletTransparency;
 	
 	private SceneManager sm;
 	
@@ -83,12 +84,29 @@ public class SettingPaneManager implements Loading {
 		fullScreen = new SettingMenu("Full Screen Mode", (GameSetting.fullScreen ? "Full Screen" : "Window")) {
 			@Override
 			public void change() {
-				option.setText((option.getText().equals("Full Screen") ? "Window" : "Full Screen"));
+				option.setText((option.getText().equals("< Full Screen >") ? "< Window >" : "< Full Screen >"));
+			}
+		};
+		bulletTransparency = new SettingMenu("Bullet Transparency", GameSetting.bulletTransparency + "") {
+			@Override
+			public void change() {
+				switch(option.getText()) {
+				case "< 0.5 >":
+					option.setText("< " + 0.7 + " >");
+					break;
+				case "< 0.7 >":
+					option.setText("< " + 0.2 + " >");
+					break;
+				case "< 0.2 >":
+					option.setText("< " + 0.5 + " >");
+					break;
+				}
 			}
 		};
 		choices.add(fullScreen);
+		choices.add(bulletTransparency);
 		
-		contents.getChildren().add(fullScreen);
+		contents.getChildren().addAll(fullScreen, bulletTransparency);
 		
 		pane.getChildren().addAll(back, title, rect, contents);
 		
@@ -121,8 +139,10 @@ public class SettingPaneManager implements Loading {
 				choices.get(++curr).selected();
 				break;
 			case LEFT:
+				choices.get(curr).change();
 				break;
 			case RIGHT:
+				choices.get(curr).change();
 				break;
 			default:
 			}
