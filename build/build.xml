@@ -132,12 +132,12 @@
 		<fx:resources id="appRes">
 			<fx:fileset dir="dist" includes="StgDemo.jar"/>
 			<fx:fileset dir="dist" includes="libs/*"/>
-			<fx:fileset dir="dist" includes="resources/**"/>
+			<fx:fileset dir="dist" includes="src/resources/**"/>
 		</fx:resources>
 	
 		<fx:application id="fxApplication"
 			name="Demo"
-			mainClass="gui.Main"
+			mainClass="gui.GameStart"
 			toolkit="fx"
 		/>
 	

@@ -21,9 +21,10 @@ import util.Util;
  * 1. new [Character] [PosX] [PosY] -- add a new character to the pane
  * 2. remove [Character] -- remove the certain character from the pane
  * 3. removeAll -- remove all characters from the pane 
- * 4. dialog [Character] [Dialog] -- show dialog
+ * 4. dialog [Character] [Text] -- show dialog
  * 5. back [Background] -- change the background of the pane
  * 6. set [Character] [newPosX] [newPosY] -- change the pos of the character
+ * 7. text [Text] -- show text
  * */
 public class StoryPaneManager implements Loading {
 	
@@ -48,6 +49,8 @@ public class StoryPaneManager implements Loading {
 			
 			dialog.setLayoutX(25);
 			dialog.setLayoutY(300);
+			dialog.setMaxWidth(600);
+			dialog.setWrapText(true);
 		}
 	}
 	
@@ -182,7 +185,19 @@ public class StoryPaneManager implements Loading {
 						}
 					});
 					break;
-				}
+				case "text":
+					commands.offer(new StoryCommand() {
+						@Override
+						public void run() {
+							next = false;
+							// TODO change to param.Default color
+							dialogPane.name.setTextFill(Color.BLACK);
+							dialogPane.dialog.setTextFill(Color.BLACK);
+							dialogPane.name.setText("");
+							dialogPane.dialog.setText(temp[1]);
+						}
+					});
+				}	
 			}
 		} catch(IOException | NumberFormatException e) {
 			Util.errorBox("Error opening the file", "ÎÄ¼þËð»µ¡£");

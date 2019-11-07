@@ -1,6 +1,8 @@
 package gui;
 
 
+import gui.titleScreen.TitleScreenManager;
+
 // --module-path D:\javafx-sdk-11.0.2\lib  --add-modules=javafx.controls 
 
 import javafx.application.Application;
@@ -12,7 +14,7 @@ public class GameStart extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		SceneManager sc = new SceneManager();
-		sc.setInitialPane(new LoadingScreen(new ViewManager(sc, new TestEvent1(sc))));
+		sc.setInitialPane(new LoadingScreen(new TitleScreenManager(sc)));
 		
 		stage = sc.getStage();
 		stage.show();
