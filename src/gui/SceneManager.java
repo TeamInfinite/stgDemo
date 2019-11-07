@@ -1,7 +1,9 @@
 package gui;
 
+import controller.GameSetting;
 import javafx.animation.FadeTransition;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -15,12 +17,16 @@ public class SceneManager {
 	
 	private Scene scene;
 	private Stage stage;
-	
 
 	/** Setting stage, scene and the first pane that will be shown.
 	 *  @param pane the first pane of the window, usually the title screen. */
 	public void setInitialPane(Pane pane) {
+		GameSetting.load();
+		
 		stage = new Stage();
+		stage.setFullScreen(GameSetting.fullScreen);
+		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+		stage.setFullScreenExitHint("");
 		scene = new Scene(pane, PaneParam.MAIN_PANE_WIDTH, PaneParam.MAIN_PANE_HEIGHT);
 		
 		stage.setTitle(PaneParam.GUI_TITLE);

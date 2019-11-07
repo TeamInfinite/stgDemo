@@ -1,13 +1,11 @@
 package gui;
 
-
 import gui.titleScreen.TitleScreenManager;
 
 // --module-path D:\javafx-sdk-11.0.2\lib  --add-modules=javafx.controls 
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.events.TestEvent1;
 
 public class GameStart extends Application {
 

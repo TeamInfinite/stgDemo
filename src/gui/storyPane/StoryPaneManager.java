@@ -38,7 +38,7 @@ public class StoryPaneManager implements Loading {
 		public DialogPane() {
 			back.setFill(Color.AZURE);
 			back.setOpacity(0.5);
-			
+
 			getChildren().addAll(back, name, dialog);
 			
 			back.setLayoutX(10);

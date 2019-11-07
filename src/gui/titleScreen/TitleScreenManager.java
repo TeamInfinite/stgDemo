@@ -2,9 +2,11 @@ package gui.titleScreen;
 
 import java.util.ArrayList;
 
+import controller.GameSetting;
 import gui.LoadingScreen;
 import gui.PaneParam;
 import gui.SceneManager;
+import gui.SettingPaneManager;
 import gui.ViewManager;
 import gui.storyPane.StoryPaneManager;
 import javafx.application.Platform;
@@ -58,6 +60,8 @@ public class TitleScreenManager implements Loading {
 			case ENTER:
 				if(curr == 0) {
 					scene.setRoot(new LoadingScreen(new StoryPaneManager(scene, "src\\resources\\text\\Text1", new TestEvent1(scene))));
+				} else if(curr == 1) {
+					scene.setRoot(new LoadingScreen(new SettingPaneManager(scene)));
 				}
 				break;
 			default :

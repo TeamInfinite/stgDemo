@@ -3,8 +3,8 @@ package gui;
 public final class PaneParam {
 	
 	// Main Pane 
-	public final static double MAIN_PANE_WIDTH = 640;
-	public final static double MAIN_PANE_HEIGHT = 480;
+	public final static double MAIN_PANE_WIDTH = 1280;
+	public final static double MAIN_PANE_HEIGHT = 720;
 	public final static String GUI_TITLE = "Demo";
 	
 	// Game Pane
