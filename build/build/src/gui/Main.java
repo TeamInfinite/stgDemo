@@ -6,14 +6,14 @@ import gui.titleScreen.TitleScreenManager;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import test.TestPane;
+import model.events.TestEvent1;
 
 public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
 		SceneManager sc = new SceneManager();
-		sc.setInitialPane(new LoadingScreen(new TitleScreenManager(sc)));
+		sc.setInitialPane(new LoadingScreen(new ViewManager(sc, new TestEvent1(sc))));
 		
 		stage = sc.getStage();
 		stage.show();
